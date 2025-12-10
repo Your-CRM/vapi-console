@@ -85,11 +85,15 @@ const avatarUrl = computed(() => {
 const userInitials = computed(() => {
   const name = authStore.userName
   if (!name) return 'U'
-  const parts = name.split(' ')
+  const parts = name.split(' ').filter(p => p.length > 0)
   if (parts.length >= 2) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+    const first = parts[0]?.[0]
+    const last = parts[parts.length - 1]?.[0]
+    if (first && last) {
+      return (first + last).toUpperCase()
+    }
   }
-  return name[0].toUpperCase()
+  return name[0]?.toUpperCase() || 'U'
 })
 </script>
 

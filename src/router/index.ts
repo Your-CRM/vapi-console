@@ -224,7 +224,7 @@ const updateMetaTag = (name: string, content: string, attribute: string = 'name'
 }
 
 // Update document title and meta tags on route change
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   // Get the title from route meta or use default
   const title = to.meta?.title as string | undefined
   const fullTitle = title ? `${title}${TITLE_SUFFIX}` : DEFAULT_TITLE

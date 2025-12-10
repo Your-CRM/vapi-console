@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { MotionPlugin } from '@vueuse/motion'
+import 'overlayscrollbars/overlayscrollbars.css'
 import './style.css'
 import App from './App.vue'
 import router from './router'

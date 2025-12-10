@@ -3,7 +3,7 @@ import { useAuthStore } from '@/stores/auth'
 
 export const requireAuth = (
   to: RouteLocationNormalized,
-  from: RouteLocationNormalized,
+  _from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
   const authStore = useAuthStore()
@@ -16,8 +16,8 @@ export const requireAuth = (
 }
 
 export const requireGuest = (
-  to: RouteLocationNormalized,
-  from: RouteLocationNormalized,
+  _to: RouteLocationNormalized,
+  _from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
   const authStore = useAuthStore()

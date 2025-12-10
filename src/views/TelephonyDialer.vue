@@ -254,9 +254,24 @@
               </div>
 
               <!-- Modal Content -->
-              <div class="bg-white dark:bg-gray-800 px-6 py-4 flex-1 overflow-y-auto">
-            <div v-if="selectedCampaign" class="space-y-6">
-              <!-- Campaign Info -->
+              <OverlayScrollbarsComponent
+                :options="{
+                  scrollbars: {
+                    theme: 'os-theme-dark',
+                    autoHide: 'move',
+                    autoHideDelay: 800,
+                    clickScroll: true,
+                  },
+                  overflow: {
+                    x: 'hidden',
+                    y: 'scroll',
+                  },
+                }"
+                class="flex-1"
+              >
+                <div class="bg-white dark:bg-gray-800 px-6 py-4">
+                  <div v-if="selectedCampaign" class="space-y-6">
+                    <!-- Campaign Info -->
               <div>
                 <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Campaign Information</h4>
                 <div class="grid grid-cols-2 gap-4">
@@ -280,7 +295,7 @@
                   <div>
                     <p class="text-sm text-gray-500 dark:text-gray-400">Team</p>
                     <p class="text-base font-medium text-gray-900 dark:text-white">
-                      {{ teams.find(t => t.id === selectedCampaign.team_id)?.name || 'N/A' }}
+                      {{ getTeamName() }}
                     </p>
                   </div>
                   <div>
@@ -374,9 +389,10 @@
                     </span>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
+                    </div>
+                  </div>
+                </div>
+              </OverlayScrollbarsComponent>
 
               <div class="bg-gray-50 dark:bg-gray-900 px-6 py-4 border-t border-gray-200 dark:border-gray-700">
                 <button
@@ -397,7 +413,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, Teleport, Transition } from 'vue'
 import { PhoneIcon, PhoneArrowUpRightIcon, EyeIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { apiService, type Team, type Campaign, type Contact, type CallRequest } from '@/services/api'
+import { type Team, type Campaign, type Contact } from '@/services/api'
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue'
 
 // Mock data
 const mockTeams: Team[] = [
@@ -650,6 +667,13 @@ const getScriptText = (type: 'opening' | 'main' | 'closing'): string => {
   }
   
   return selectedCampaign.value.callScripts?.[type] || defaults[type]
+}
+
+// Helper function to get team name
+const getTeamName = (): string => {
+  const campaign = selectedCampaign.value
+  if (!campaign?.team_id) return 'N/A'
+  return teams.value.find(t => t.id === campaign.team_id)?.name || 'N/A'
 }
 
 // Helper function to get AI assistant prompt

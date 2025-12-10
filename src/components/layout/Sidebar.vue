@@ -18,12 +18,27 @@
       </div>
 
       <!-- Navigation -->
-      <nav class="flex-1 overflow-y-auto px-4 py-6">
-        <ul class="space-y-1">
+      <OverlayScrollbarsComponent
+        :options="{
+          scrollbars: {
+            theme: 'os-theme-dark',
+            autoHide: 'move',
+            autoHideDelay: 800,
+            clickScroll: true,
+          },
+          overflow: {
+            x: 'hidden',
+            y: 'scroll',
+          },
+        }"
+        class="flex-1"
+      >
+        <nav class="px-4 py-6">
+          <ul class="space-y-1">
           <li v-for="item in navigationItems" :key="item.name">
             <!-- Menu item without submenu -->
             <router-link
-              v-if="!item.children"
+              v-if="!item.children && item.to"
               :to="item.to"
               class="flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors"
               :class="
@@ -91,7 +106,8 @@
             </div>
           </li>
         </ul>
-      </nav>
+        </nav>
+      </OverlayScrollbarsComponent>
 
       <!-- User Info Footer -->
       <div class="p-4 border-t border-gray-200 dark:border-gray-700">
@@ -179,6 +195,7 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { getAvatarUrl } from '@/utils/avatar'
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue'
 
 interface NavigationChild {
   name: string
@@ -315,11 +332,15 @@ watch(
 const userInitials = computed(() => {
   const name = authStore.userName
   if (!name) return 'U'
-  const parts = name.split(' ')
+  const parts = name.split(' ').filter(p => p.length > 0)
   if (parts.length >= 2) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+    const first = parts[0]?.[0]
+    const last = parts[parts.length - 1]?.[0]
+    if (first && last) {
+      return (first + last).toUpperCase()
+    }
   }
-  return name[0].toUpperCase()
+  return name[0]?.toUpperCase() || 'U'
 })
 
 const handleLogout = () => {
